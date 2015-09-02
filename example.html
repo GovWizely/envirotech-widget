@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Envirotech Widget Example</title>
+    <link rel="stylesheet" type="text/css" href="widget.css">
+    <style type="text/css">
+      body {
+        background-color: #eee;
+      }
+    </style>
+
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="widget.js"></script>
+    <script>
+      var apiKey = document.URL.split('?api_key=')[1];
+
+      $(document).ready(function ($) {
+        $("#example-widget").envirotechWidget({
+          apiKey: apiKey,
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <p>Usage: pass your API key to the page via the ?api_key= query parameter.</p>
+    <div id="example-widget"></div>
+    <br/><br/>
+  </body>
+</html>
