@@ -1,4 +1,4 @@
-var HTMLBuilder = {
+var EnvirotechHTMLBuilder = {
   translate: function(key) {
               var langCode = window.envirotechLangCode;
               return window.envirotechLangConf[langCode][key];
@@ -6,8 +6,8 @@ var HTMLBuilder = {
 
   searchForm: function() {
                 var searchForm = $('<form>');
-                searchForm.append(HTMLBuilder.issueBox());
-                searchForm.append(HTMLBuilder.submitBtn());
+                searchForm.append(EnvirotechHTMLBuilder.issueBox());
+                searchForm.append(EnvirotechHTMLBuilder.submitBtn());
 
                 searchForm.on('submit', function(e) {
                   e.preventDefault();
@@ -19,17 +19,17 @@ var HTMLBuilder = {
 
   issueBox: function() {
               var box = $('<select>');
-              box.append('<option value="">' + HTMLBuilder.translate('select_an_option') + '</option>');
+              box.append('<option value="">' + EnvirotechHTMLBuilder.translate('select_an_option') + '</option>');
               return box;
             },
 
   submitBtn: function() {
-               return '<input type="submit" value="' + HTMLBuilder.translate('submit') + '">';
+               return '<input type="submit" value="' + EnvirotechHTMLBuilder.translate('submit') + '">';
              },
 
   languageSelection: function() {
                        var buttons = $('<div>');
-                       buttons.append(HTMLBuilder.languageButtons());
+                       buttons.append(EnvirotechHTMLBuilder.languageButtons());
                        return buttons;
                      },
 
