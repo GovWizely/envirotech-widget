@@ -1,12 +1,21 @@
 var EnvirotechHTMLBuilder = {
+  veryLargeInt: 999999,
+
   translate: function(key) {
               var langCode = window.envirotechLangCode;
               return window.envirotechLangConf[langCode][key];
             },
 
+  langKey: function() {
+             return EnvirotechHTMLBuilder.translate('key');
+           },
+
   searchForm: function() {
                 var searchForm = $('<form>');
-                searchForm.append(EnvirotechHTMLBuilder.issueBox());
+                searchForm.append(EnvirotechHTMLBuilder.selectBoxFor('issues'));
+                searchForm.append(EnvirotechHTMLBuilder.selectBoxFor('regulations'));
+                searchForm.append(EnvirotechHTMLBuilder.selectBoxFor('solutions'));
+                searchForm.append(EnvirotechHTMLBuilder.selectBoxFor('providers'));
                 searchForm.append(EnvirotechHTMLBuilder.submitBtn());
 
                 searchForm.on('submit', function(e) {
@@ -17,11 +26,23 @@ var EnvirotechHTMLBuilder = {
                 return searchForm;
               },
 
-  issueBox: function() {
-              var box = $('<select>');
-              box.append('<option value="">' + EnvirotechHTMLBuilder.translate('select_an_option') + '</option>');
-              return box;
-            },
+  selectBoxFor: function(type) {
+                  var box = $('<select>');
+                  box.append('<option value="">' + EnvirotechHTMLBuilder.translate('select_an_option') + '</option>');
+
+                  var options = {
+                    size: EnvirotechHTMLBuilder.veryLargeInt
+                  };
+
+                  EnvirotechWidget.loadData('/envirotech/' + type + '/search', options, function(data) {
+                    var langKey = EnvirotechHTMLBuilder.langKey();
+                    $.each(data.results, function(index, record) {
+                      box.append('<option value="' + record['source_id'] + '">' + record['name_' + langKey] + '</option>')
+                    });
+                  });
+
+                  return box;
+                },
 
   submitBtn: function() {
                return '<input type="submit" value="' + EnvirotechHTMLBuilder.translate('submit') + '">';
@@ -35,8 +56,9 @@ var EnvirotechHTMLBuilder = {
 
   languageButtons: function() {
                      var buttonsHTML = $('<span>');
+
                      $.each(window.envirotechLangConf, function(langCode, conf) {
-                       var button = $('<a href="#">');
+                       var button = $('<a href="#" class="envirotech-language-btn">');
                        button.addClass('envirotech-lang-btn');
                        button.html(conf['name']);
                        button.data('lang_code', langCode);
@@ -48,6 +70,7 @@ var EnvirotechHTMLBuilder = {
                        });
                        buttonsHTML.append(button);
                      });
+
                      return buttonsHTML;
                    }
 };
