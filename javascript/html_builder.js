@@ -58,16 +58,17 @@ var EnvirotechHTMLBuilder = {
                      var buttonsHTML = $('<span>');
 
                      $.each(window.envirotechLangConf, function(langCode, conf) {
-                       var button = $('<a href="#" class="envirotech-language-btn">');
-                       button.addClass('envirotech-lang-btn');
-                       button.html(conf['name']);
-                       button.data('lang_code', langCode);
+                       var button = $('<a href="#" class="envirotech-language-btn">')
+                       .addClass('envirotech-lang-btn')
+                       .html(conf['name'])
+                       .data('lang_code', langCode);
 
                        button.on("click", function(e) {
                          e.preventDefault();
                          window.envirotechLangCode = $(this).data('lang_code');
                          EnvirotechWidget.initialize();
                        });
+
                        buttonsHTML.append(button);
                      });
 
