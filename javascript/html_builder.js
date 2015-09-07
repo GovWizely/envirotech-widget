@@ -26,23 +26,102 @@ var EnvirotechHTMLBuilder = {
                 return searchForm;
               },
 
+  getSelectBoxFor: function(type) {
+                     return $('select[name=envirotech-select-' + type + ']');
+                   },
+
+  emptyOptionHTML: function() {
+                     return '<option value="">' + EnvirotechHTMLBuilder.translate('select_an_option') + '</option>';
+                   },
+
+  buildOptionHTML: function(value, text) {
+                     return '<option value="' + value + '">' + text + '</option>'
+                   },
+
   selectBoxFor: function(type) {
-                  var box = $('<select>');
-                  box.append('<option value="">' + EnvirotechHTMLBuilder.translate('select_an_option') + '</option>');
+                  var box = $('<select name="envirotech-select-' + type + '">').prop("disabled", "disabled");
+                  box.append(EnvirotechHTMLBuilder.emptyOptionHTML());
 
                   var options = {
                     size: EnvirotechHTMLBuilder.veryLargeInt
                   };
 
-                  EnvirotechWidget.loadData('/envirotech/' + type + '/search', options, function(data) {
-                    var langKey = EnvirotechHTMLBuilder.langKey();
-                    $.each(data.results, function(index, record) {
-                      box.append('<option value="' + record['source_id'] + '">' + record['name_' + langKey] + '</option>')
-                    });
+                  EnvirotechWidget.loadData(type, options, function(data) {
+                    EnvirotechHTMLBuilder.loadDataInto(type, data);
+                  });
+
+                  box.on("change", function(e) {
+                    EnvirotechHTMLBuilder.loadOptionsFor(box, type);
                   });
 
                   return box;
                 },
+
+  loadOptionsFor: function(box, type) {
+                    switch(type) {
+                      case 'issues':
+                        EnvirotechHTMLBuilder.loadOptionsForIssues(box);
+                        break;
+                      case 'regulations':
+                        EnvirotechHTMLBuilder.loadOptionsForRegulations(box);
+                        break;
+                      case 'solutions':
+                        break;
+                      case 'providers':
+                        break;
+                      default:
+                        console.log("Invalid type");
+                    }
+                  },
+
+  loadOptionsForIssues: function(box) {
+                          EnvirotechHTMLBuilder.disableBoxesFor(['regulations', 'solutions', 'providers']);
+
+                          var options = {
+                            issue_ids: box.val(),
+                            size: EnvirotechWidget.veryLargeInt
+                          };
+
+                          // Load regulations
+                          EnvirotechWidget.loadData('regulations', options, function(data) {
+                            EnvirotechHTMLBuilder.loadDataInto('regulations', data);
+                          });
+
+                          // Load solutions
+                          EnvirotechWidget.loadData('solutions', options, function(data) {
+                            EnvirotechHTMLBuilder.loadDataInto('solutions', data);
+                          });
+
+                          // Load providers
+                          EnvirotechWidget.loadData('providers', options, function(data) {
+                            EnvirotechHTMLBuilder.loadDataInto('providers', data);
+                          });
+                        },
+
+  loadDataInto: function(type, data) {
+              var box = EnvirotechHTMLBuilder.getSelectBoxFor(type);
+              var langKey = EnvirotechHTMLBuilder.langKey();
+
+              box.empty().append(EnvirotechHTMLBuilder.emptyOptionHTML());
+
+              $.each(data, function(i, record) {
+                var optionHTML = EnvirotechHTMLBuilder.buildOptionHTML(record['source_id'], record['name_' + langKey]);
+                box.append(optionHTML);
+              });
+
+              if(data.length == 1) {
+                box.val(data[0].source_id);
+              }
+
+              box.prop("disabled", false);
+            },
+
+  disableBoxesFor: function(types) {
+                     $.each(types, function(i, type) {
+                       var box = EnvirotechHTMLBuilder.getSelectBoxFor(type);
+                       box.prop("disabled", "disabled");
+                     });
+                   },
 
   submitBtn: function() {
                return '<input type="submit" value="' + EnvirotechHTMLBuilder.translate('submit') + '">';
