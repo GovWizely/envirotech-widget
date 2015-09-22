@@ -85,8 +85,10 @@ var EnvirotechHTMLBuilder = {
                         EnvirotechHTMLBuilder.loadOptionsForRegulations(box);
                         break;
                       case 'solutions':
+                        EnvirotechHTMLBuilder.loadOptionsForSolutions(box);
                         break;
                       case 'providers':
+                        EnvirotechHTMLBuilder.loadOptionsForProviders(box);
                         break;
                       default:
                         console.log("Invalid type");
@@ -102,20 +104,84 @@ var EnvirotechHTMLBuilder = {
                           };
 
                           // Load regulations
-                          EnvirotechWidget.loadData('regulations', options, function(data) {
-                            EnvirotechHTMLBuilder.loadDataInto('regulations', data);
+                          EnvirotechWidget.loadData('regulations', options, function(regulations) {
+                            EnvirotechHTMLBuilder.loadDataInto('regulations', regulations);
                           });
 
                           // Load solutions
-                          EnvirotechWidget.loadData('solutions', options, function(data) {
-                            EnvirotechHTMLBuilder.loadDataInto('solutions', data);
+                          EnvirotechWidget.loadData('solutions', options, function(solutions) {
+                            EnvirotechHTMLBuilder.loadDataInto('solutions', solutions);
+                            var ps_options = {
+                              size: EnvirotechHTMLBuilder.veryLargeInt,
+                              solution_ids: EnvirotechUtility.collectFromArray(solutions, 'source_id').join(',')
+                            };
+
+                            EnvirotechWidget.loadData('provider_solutions', ps_options, function(provider_solutions) {
+                              var p_options = {
+                                size: EnvirotechHTMLBuilder.veryLargeInt,
+                                source_ids: EnvirotechUtility.collectFromArray(provider_solutions, 'provider_id').join(',')
+                              };
+                              EnvirotechWidget.loadData('providers', p_options, function(providers) {
+                                EnvirotechHTMLBuilder.loadDataInto('providers', providers);
+                              });
+                            });
                           });
 
-                          // Load providers
-                          EnvirotechWidget.loadData('providers', options, function(data) {
-                            EnvirotechHTMLBuilder.loadDataInto('providers', data);
-                          });
                         },
+
+  loadOptionsForRegulations: function(box) {
+                               EnvirotechHTMLBuilder.disableBoxesFor(['issues', 'solutions', 'providers']);
+
+                               var options = {
+                                 regulation_ids: box.val(),
+                                 size: EnvirotechHTMLBuilder.veryLargeInt
+                               };
+
+                               //Load issues
+                               EnvirotechWidget.loadData('issues', options, function(issues) {
+                                 EnvirotechHTMLBuilder.loadDataInto('issues', issues);
+                               });
+
+                               // Load solutions
+                               EnvirotechWidget.loadData('solutions', options, function(solutions) {
+                                 EnvirotechHTMLBuilder.loadDataInto('solutions', solutions);
+                                 var ps_options = {
+                                   size: EnvirotechHTMLBuilder.veryLargeInt,
+                                   solution_ids: EnvirotechUtility.collectFromArray(solutions, 'source_id').join(',')
+                                 };
+
+                                 EnvirotechWidget.loadData('provider_solutions', ps_options, function(provider_solutions) {
+                                   var p_options = {
+                                     size: EnvirotechHTMLBuilder.veryLargeInt,
+                                     source_ids: EnvirotechUtility.collectFromArray(provider_solutions, 'provider_id').join(',')
+                                   };
+                                   EnvirotechWidget.loadData('providers', p_options, function(providers) {
+                                     EnvirotechHTMLBuilder.loadDataInto('providers', providers);
+                                   });
+                                 });
+                               });
+                             },
+
+  loadOptionsForSolutions: function(box) {
+                             EnvirotechHTMLBuilder.disableBoxesFor(['providers']);
+                             var options = {
+                               size: EnvirotechHTMLBuilder.veryLargeInt,
+                               solution_ids: box.val()
+                             };
+
+                             EnvirotechWidget.loadData('provider_solutions', options, function(provider_solutions) {
+                               var p_options = {
+                                 size: EnvirotechHTMLBuilder.veryLargeInt,
+                                 source_ids: EnvirotechUtility.collectFromArray(provider_solutions, 'provider_id').join(',')
+                               };
+                               EnvirotechWidget.loadData('providers', p_options, function(providers) {
+                                 EnvirotechHTMLBuilder.loadDataInto('providers', providers);
+                               });
+                             });
+                           },
+
+  loadOptionsForProviders: function(box) {
+                           },
 
   loadDataInto: function(type, data) {
               var box = EnvirotechHTMLBuilder.getSelectBoxFor(type);
@@ -188,4 +254,16 @@ var EnvirotechHTMLBuilder = {
                  panel.append(panelBody);
                  return panel;
                }
+};
+
+var EnvirotechUtility = {
+  collectFromArray: function(arr, key) {
+                      var ret = [];
+
+                      $.each(arr, function(i, v) {
+                        ret.push(v[key]);
+                      });
+
+                      return ret;
+                    }
 };

@@ -33,8 +33,8 @@ var EnvirotechWidget = {
 (function () {
   jQuery(document).ready(function ($) {
     $.fn.envirotechWidget = function (options) {
-      //options.host = 'https://api.govwizely.com',
-      options.host = 'http://127.0.0.1:3000',
+      options.host = 'https://api.govwizely.com',
+      //options.host = 'http://127.0.0.1:3000',
 
       EnvirotechWidget.container = $(this);
       EnvirotechWidget.options   = options;
