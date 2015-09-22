@@ -13,7 +13,7 @@ var jQuery = concat('javascript', {
 });
 
 var appJs = concat('.', {
-  inputFiles: ['bower_components/chosen/chosen.jquery.min.js',
+  inputFiles: [
     'javascript/language_config.js',
     'javascript/html_builder.js',
     'javascript/jquery.paging.js',
@@ -23,8 +23,7 @@ var appJs = concat('.', {
 });
 appJs = uglifyJavaScript(appJs);
 
-var appCss = compileSass(['sass', 'bower_components/bootstrap-sass/assets/stylesheets',
-  'bower_components/bootstrap-chosen'], 'style.scss', 'widget.css');
+var appCss = compileSass(['sass', 'bower_components/bootstrap-sass/assets/stylesheets'], 'style.scss', 'widget.css');
 
 var html = concat('.', {
   inputFiles: ['example.html'],

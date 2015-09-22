@@ -8,7 +8,6 @@ var EnvirotechWidget = {
                 EnvirotechWidget.container.addClass('envirotech-widget-container');
                 EnvirotechWidget.container.append(EnvirotechHTMLBuilder.languageSelection());
                 EnvirotechWidget.container.append(EnvirotechHTMLBuilder.searchPanel());
-                container.find('select').chosen();
               },
 
   loadData: function(type, options, callback) {
@@ -22,7 +21,6 @@ var EnvirotechWidget = {
                 success: function(data) {
                   EnvirotechWidget.apiData[type] = data.results;
                   callback(EnvirotechWidget.apiData[type]);
-                  container.find('select').trigger('chosen:updated');
                 },
               });
             },
