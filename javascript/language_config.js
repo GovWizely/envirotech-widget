@@ -6,6 +6,12 @@ window.envirotechLangConf = {
         name: 'English',
         select_an_option: 'Select an Option',
         submit: 'Find Solutions',
+        clear: 'Clear',
+        search: 'Search',
+        issues: 'Environmental Issue',
+        regulations: 'EPA Regulation',
+        solutions: 'Solution',
+        providers: 'U.S. Solution Provider'
       },
 
   sp: {
@@ -13,6 +19,12 @@ window.envirotechLangConf = {
         name: 'Español',
         select_an_option: 'Seleccione una Opción',
         submit: 'Encontrar Soluciones',
+        clear: 'Clear',
+        search: 'Search',
+        issues: 'Environmental Issue',
+        regulations: 'EPA Regulation',
+        solutions: 'Solution',
+        providers: 'U.S. Solution Provider'
       },
 
   zh: {
@@ -20,6 +32,12 @@ window.envirotechLangConf = {
         name: '中文',
         select_an_option: '选择一个选项',
         submit: '查找解决方案',
+        clear: 'Clear',
+        search: 'Search',
+        issues: 'Environmental Issue',
+        regulations: 'EPA Regulation',
+        solutions: 'Solution',
+        providers: 'U.S. Solution Provider'
       },
 
   fr: {
@@ -27,6 +45,12 @@ window.envirotechLangConf = {
         name: 'Français',
         select_an_option: 'Sélectionnez une option',
         submit: 'Trouver des solutions',
+        clear: 'Clear',
+        search: 'Search',
+        issues: 'Environmental Issue',
+        regulations: 'EPA Regulation',
+        solutions: 'Solution',
+        providers: 'U.S. Solution Provider'
       },
 
   pt: {
@@ -34,5 +58,11 @@ window.envirotechLangConf = {
         name: 'Português',
         select_an_option: 'Selecione Uma Opção',
         submit: 'Encontrar Soluções',
+        clear: 'Clear',
+        search: 'Search',
+        issues: 'Environmental Issue',
+        regulations: 'EPA Regulation',
+        solutions: 'Solution',
+        providers: 'U.S. Solution Provider'
       }
 };

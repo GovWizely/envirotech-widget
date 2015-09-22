@@ -1,14 +1,50 @@
+$PANEL_HEADING_BACKGROUND: #585858;
+$PANEL_BODY_BACKGROUND: #f5f5f5;
+
 .envirotech-widget-container {
-  a.envirotech-language-btn {
-    display: inline-block;
-    padding: 4px 10px 4px;
-    font-size: 13px;
-    line-height: 18px;
-    text-align: center;
-    border: 1px solid #CCC;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  @import 'bootstrap';
+  @import 'bootstrap-chosen';
+
+  width: 780px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  a {
+    &.btn {
+      margin: 0 5px 5px 0;
+    }
+  }
+
+  .panel-default {
+    > .panel-heading {
+      background-color: $PANEL_HEADING_BACKGROUND;
+      color: white;
+    }
+    .panel-body {
+      background-color: $PANEL_BODY_BACKGROUND;
+      form {
+        .form-group {
+          height: 66px;
+          label {
+            text-transform: capitalize;
+          }
+        }
+        .form-actions {
+          margin-top:14px;
+          input {
+            float: right;
+            margin-left:20px;
+            padding-left:40px;
+            padding-right:40px;
+          }
+        }
+      }
+    }
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      max-width: 750px;
+    }
   }
 }
