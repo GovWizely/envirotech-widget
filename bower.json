@@ -1,0 +1,25 @@
+{
+  "name": "envirotech-widget",
+  "version": "0.0.1",
+  "homepage": "https://github.com/GovWizely/envirotech-widget",
+  "authors": [
+    "Laiq Jafri <laiq@rrsoft.co>",
+    "Calum Halcrow <calum@rrsoft.co>"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-sass": "~3.3.5",
+    "bootstrap-chosen": "~1.0.1",
+    "chosen": "~1.4.2"
+  }
+}

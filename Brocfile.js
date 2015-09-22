@@ -12,17 +12,19 @@ var jQuery = concat('javascript', {
   outputFile: '/jquery.js'
 });
 
-var appJs = concat('javascript', {
-  inputFiles: ['language_config.js',
-    'html_builder.js',
-    'jquery.paging.js',
-    'widget.js'
+var appJs = concat('.', {
+  inputFiles: ['bower_components/chosen/chosen.jquery.min.js',
+    'javascript/language_config.js',
+    'javascript/html_builder.js',
+    'javascript/jquery.paging.js',
+    'javascript/widget.js'
   ],
   outputFile: '/widget.js'
 });
 appJs = uglifyJavaScript(appJs);
 
-var appCss = compileSass(['sass'], 'style.scss', 'widget.css');
+var appCss = compileSass(['sass', 'bower_components/bootstrap-sass/assets/stylesheets',
+  'bower_components/bootstrap-chosen'], 'style.scss', 'widget.css');
 
 var html = concat('.', {
   inputFiles: ['example.html'],
