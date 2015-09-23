@@ -27,17 +27,17 @@ window.envirotechLangConf = {
         providers: 'Proveedor de Soluciones de EE.UU.'
       },
 
-  zh: {
-        key: 'chinese',
-        name: '中文',
-        select_an_option: '选择一个选项',
-        submit: '查找解决方案',
-        clear: '清除',
-        search: '搜',
-        issues: '环境问题',
-        regulations: 'EPA法规',
-        solutions: '解决方法',
-        providers: '美国解决方案提供商'
+  pt: {
+        key: 'portuguese',
+        name: 'Português',
+        select_an_option: 'Selecione Uma Opção',
+        submit: 'Encontrar Soluções',
+        clear: 'Claro',
+        search: 'Busca',
+        issues: 'Questão ambiental',
+        regulations: 'EPA Regulamento',
+        solutions: 'Solução',
+        providers: 'Solution Provider EUA'
       },
 
   fr: {
@@ -53,16 +53,16 @@ window.envirotechLangConf = {
         providers: 'Solution Provider États-Unis'
       },
 
-  pt: {
-        key: 'portuguese',
-        name: 'Português',
-        select_an_option: 'Selecione Uma Opção',
-        submit: 'Encontrar Soluções',
-        clear: 'Claro',
-        search: 'Busca',
-        issues: 'Questão ambiental',
-        regulations: 'EPA Regulamento',
-        solutions: 'Solução',
-        providers: 'Solution Provider EUA'
+  zh: {
+        key: 'chinese',
+        name: '中文',
+        select_an_option: '选择一个选项',
+        submit: '查找解决方案',
+        clear: '清除',
+        search: '搜',
+        issues: '环境问题',
+        regulations: 'EPA法规',
+        solutions: '解决方法',
+        providers: '美国解决方案提供商'
       }
 };
