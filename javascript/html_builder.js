@@ -14,7 +14,8 @@ var EnvirotechHTMLBuilder = {
                 var searchForm = $('<form>');
                 searchForm.on('submit', function(e) {
                   e.preventDefault();
-                  console.log("Form submitted");
+                  EnvirotechHTMLBuilder.loadResultsAndLinks();
+                  return false;
                 });
 
                 var container = $('<div class="container"></div>');
@@ -253,7 +254,55 @@ var EnvirotechHTMLBuilder = {
                  panelBody.append(EnvirotechHTMLBuilder.searchForm());
                  panel.append(panelBody);
                  return panel;
-               }
+               },
+
+  resultsContainer: function() {
+                      var container = $('<div class="container" id="envirotech-results-container"></div>');
+                      return container;
+                    },
+
+  loadResultsAndLinks: function() {
+                         var issue_ids = [];
+                         var issues_box = EnvirotechHTMLBuilder.getSelectBoxFor('issues');
+                         if (issues_box.val() != "") {
+                           issue_ids.push(issues_box.val());
+                         } else {
+                           $.each(issues_box.find('option'), function(i, option) {
+                             if ($(option).val() != "") {
+                               issue_ids.push($(option).val());
+                             }
+                           });
+                         }
+
+                         var options = {
+                           size: EnvirotechHTMLBuilder.veryLargeInt,
+                           source_ids: issue_ids.join(",")
+                         };
+                         EnvirotechWidget.loadData('issues', options, function(issues) {
+                           $.each(issues, function(i, issue) {
+                             var langKey    = EnvirotechHTMLBuilder.langKey();
+                             var issueName  = issue['name_' + langKey];
+                             var resultsDiv = $('<div class="row"></div>');
+                             resultsDiv.append('<h3>' + issueName + '</h3>');
+                             var options = {
+                               size: EnvirotechHTMLBuilder.veryLargeInt,
+                               issue_ids: issue.source_id
+                             };
+
+                             $.each(['background_links', 'analysis_links'], function(i, link_type) {
+                              EnvirotechWidget.loadData(link_type, options, function(links) {
+                                $.each(links, function(i, link) {
+                                  var linkHTML = '<a target="_blank" href="' + link['url'] + '">' + link['name_' + langKey] + '</a>';
+                                  var linkDiv  = $('<div class="row"></div>');
+                                  linkDiv.append(linkHTML)
+                                  resultsDiv.append(linkDiv);
+                                });
+                              });
+                             });
+                             $('#envirotech-results-container').empty().append(resultsDiv);
+                           });
+                         });
+                       },
 };
 
 var EnvirotechUtility = {

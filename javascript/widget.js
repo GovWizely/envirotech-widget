@@ -8,6 +8,7 @@ var EnvirotechWidget = {
                 EnvirotechWidget.container.addClass('envirotech-widget-container');
                 EnvirotechWidget.container.append(EnvirotechHTMLBuilder.languageSelection());
                 EnvirotechWidget.container.append(EnvirotechHTMLBuilder.searchPanel());
+                EnvirotechWidget.container.append(EnvirotechHTMLBuilder.resultsContainer());
               },
 
   loadData: function(type, options, callback) {
