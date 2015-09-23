@@ -19,12 +19,12 @@ window.envirotechLangConf = {
         name: 'Español',
         select_an_option: 'Seleccione una Opción',
         submit: 'Encontrar Soluciones',
-        clear: 'Clear',
-        search: 'Search',
-        issues: 'Environmental Issue',
-        regulations: 'EPA Regulation',
-        solutions: 'Solution',
-        providers: 'U.S. Solution Provider'
+        clear: 'Claro',
+        search: 'Buscar',
+        issues: 'Problema medioambiental',
+        regulations: 'Reglamento de la EPA',
+        solutions: 'Solución',
+        providers: 'Proveedor de Soluciones de EE.UU.'
       },
 
   zh: {
@@ -32,12 +32,12 @@ window.envirotechLangConf = {
         name: '中文',
         select_an_option: '选择一个选项',
         submit: '查找解决方案',
-        clear: 'Clear',
-        search: 'Search',
-        issues: 'Environmental Issue',
-        regulations: 'EPA Regulation',
-        solutions: 'Solution',
-        providers: 'U.S. Solution Provider'
+        clear: '清除',
+        search: '搜',
+        issues: '环境问题',
+        regulations: 'EPA法规',
+        solutions: '解决方法',
+        providers: '美国解决方案提供商'
       },
 
   fr: {
@@ -45,12 +45,12 @@ window.envirotechLangConf = {
         name: 'Français',
         select_an_option: 'Sélectionnez une option',
         submit: 'Trouver des solutions',
-        clear: 'Clear',
-        search: 'Search',
-        issues: 'Environmental Issue',
-        regulations: 'EPA Regulation',
+        clear: 'Clair',
+        search: 'Recherche',
+        issues: "L'enjeu environnemental",
+        regulations: 'EPA règlement',
         solutions: 'Solution',
-        providers: 'U.S. Solution Provider'
+        providers: 'Solution Provider États-Unis'
       },
 
   pt: {
@@ -58,11 +58,11 @@ window.envirotechLangConf = {
         name: 'Português',
         select_an_option: 'Selecione Uma Opção',
         submit: 'Encontrar Soluções',
-        clear: 'Clear',
-        search: 'Search',
-        issues: 'Environmental Issue',
-        regulations: 'EPA Regulation',
-        solutions: 'Solution',
-        providers: 'U.S. Solution Provider'
+        clear: 'Claro',
+        search: 'Busca',
+        issues: 'Questão ambiental',
+        regulations: 'EPA Regulamento',
+        solutions: 'Solução',
+        providers: 'Solution Provider EUA'
       }
 };
