@@ -262,27 +262,17 @@ var EnvirotechHTMLBuilder = {
                     },
 
   loadResultsAndLinks: function() {
-                         var issue_ids = [];
                          var issues_box = EnvirotechHTMLBuilder.getSelectBoxFor('issues');
                          if (issues_box.val() != "") {
-                           issue_ids.push(issues_box.val());
-                         } else {
-                           $.each(issues_box.find('option'), function(i, option) {
-                             if ($(option).val() != "") {
-                               issue_ids.push($(option).val());
-                             }
-                           });
-                         }
-
-                         var options = {
-                           size: EnvirotechHTMLBuilder.veryLargeInt,
-                           source_ids: issue_ids.join(",")
-                         };
-                         EnvirotechWidget.loadData('issues', options, function(issues) {
-                           $.each(issues, function(i, issue) {
+                           var options = {
+                             size: EnvirotechHTMLBuilder.veryLargeInt,
+                             source_ids: issues_box.val()
+                           };
+                           EnvirotechWidget.loadData('issues', options, function(issues) {
+                             var issue      = issues[0];
                              var langKey    = EnvirotechHTMLBuilder.langKey();
                              var issueName  = issue['name_' + langKey];
-                             var resultsDiv = $('<div class="row"></div>');
+                             var resultsDiv = $('<div class="container"></div>');
                              resultsDiv.append('<h3>' + issueName + '</h3>');
                              var options = {
                                size: EnvirotechHTMLBuilder.veryLargeInt,
@@ -290,18 +280,18 @@ var EnvirotechHTMLBuilder = {
                              };
 
                              $.each(['background_links', 'analysis_links'], function(i, link_type) {
-                              EnvirotechWidget.loadData(link_type, options, function(links) {
-                                $.each(links, function(i, link) {
-                                  var linkHTML = '<a target="_blank" href="' + link['url'] + '">' + link['name_' + langKey] + '</a>';
-                                  var linkDiv  = $('<div class="row"></div>');
-                                  linkDiv.append(linkHTML)
-                                  resultsDiv.append(linkDiv);
-                                });
-                              });
+                               EnvirotechWidget.loadData(link_type, options, function(links) {
+                                 $.each(links, function(i, link) {
+                                   var linkHTML = '<a target="_blank" href="' + link['url'] + '">' + link['name_' + langKey] + '</a>';
+                                   var linkDiv  = $('<div class="row"></div>');
+                                   linkDiv.append(linkHTML)
+                                   resultsDiv.append(linkDiv);
+                                   $('#envirotech-results-container').empty().append(resultsDiv);
+                                 });
+                               });
                              });
-                             $('#envirotech-results-container').empty().append(resultsDiv);
                            });
-                         });
+                         }
                        },
 };
 
