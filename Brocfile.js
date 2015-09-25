@@ -17,7 +17,8 @@ var appJs = concat('.', {
     'javascript/language_config.js',
     'javascript/html_builder.js',
     'javascript/jquery.paging.js',
-    'javascript/widget.js'
+    'javascript/widget.js',
+    'javascript/active_record.js'
   ],
   outputFile: '/widget.js'
 });

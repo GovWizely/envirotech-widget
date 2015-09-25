@@ -1,7 +1,6 @@
 var EnvirotechWidget = {
   container: null,
   options: {},
-  apiData: {},
 
   initialize: function() {
                 EnvirotechWidget.container.empty();
@@ -11,7 +10,7 @@ var EnvirotechWidget = {
                 EnvirotechWidget.container.append(EnvirotechHTMLBuilder.resultsContainer());
               },
 
-  loadData: function(type, options, callback) {
+  loadData: function(type, options, callback, storeResult) {
               var url = EnvirotechWidget.options.host + EnvirotechWidget.searchPath(type);
               options.api_key = EnvirotechWidget.options.apiKey;
 
@@ -20,8 +19,8 @@ var EnvirotechWidget = {
                 data: options,
                 dataType: 'json',
                 success: function(data) {
-                  EnvirotechWidget.apiData[type] = data.results;
-                  callback(EnvirotechWidget.apiData[type]);
+                  if (storeResult) { EnvirotechActiveRecord.data[type] = data.results; }
+                  callback(data.results);
                 },
               });
             },

@@ -1,5 +1,6 @@
 var EnvirotechHTMLBuilder = {
   veryLargeInt: 999999,
+  resultsPerPage: 25,
 
   translate: function(key) {
               var langCode = window.envirotechLangCode;
@@ -68,7 +69,7 @@ var EnvirotechHTMLBuilder = {
 
                   EnvirotechWidget.loadData(type, options, function(data) {
                     EnvirotechHTMLBuilder.loadDataInto(type, data);
-                  });
+                  }, true);
 
                   box.on("change", function(e) {
                     EnvirotechHTMLBuilder.loadOptionsFor(box, type);
@@ -127,7 +128,6 @@ var EnvirotechHTMLBuilder = {
                               });
                             });
                           });
-
                         },
 
   loadOptionsForRegulations: function(box) {
@@ -261,41 +261,101 @@ var EnvirotechHTMLBuilder = {
                       return container;
                     },
 
-  loadIssuesLinks: function() {
-                     var issues_box = EnvirotechHTMLBuilder.getSelectBoxFor('issues');
-                     if (issues_box.val() != "") {
-                       var options = {
-                         size: EnvirotechHTMLBuilder.veryLargeInt,
-                         source_ids: issues_box.val()
-                       };
-                       EnvirotechWidget.loadData('issues', options, function(issues) {
-                         var issue      = issues[0];
-                         var langKey    = EnvirotechHTMLBuilder.langKey();
-                         var issueName  = issue['name_' + langKey];
-                         var resultsDiv = $('<div class="container"></div>');
-                         resultsDiv.append('<h3>' + issueName + '</h3>');
-                         var options = {
-                           size: EnvirotechHTMLBuilder.veryLargeInt,
-                           issue_ids: issue.source_id
-                         };
+  loadIssueInfo: function() {
+                   var issuesBox = EnvirotechHTMLBuilder.getSelectBoxFor('issues');
+                   if (issuesBox.val() != "") {
+                     var issue      = EnvirotechActiveRecord.findById('issues', issuesBox.val());
+                     var langKey    = EnvirotechHTMLBuilder.langKey();
+                     var issueName  = issue['name_' + langKey];
+                     var resultsDiv = $('<div class="container"></div>');
+                     resultsDiv.append('<h3>' + issueName + '</h3>');
+                     resultsDiv.append('<div class="row">' + issue['abstract_' + langKey] + '</div>');
+                     var options = {
+                       size: EnvirotechHTMLBuilder.veryLargeInt,
+                       issue_ids: issue.source_id
+                     };
 
-                         $.each(['background_links', 'analysis_links'], function(i, link_type) {
-                           EnvirotechWidget.loadData(link_type, options, function(links) {
-                             $.each(links, function(i, link) {
-                               var linkHTML = '<a target="_blank" href="' + link['url'] + '">' + link['name_' + langKey] + '</a>';
-                               var linkDiv  = $('<div class="row"></div>');
-                               linkDiv.append(linkHTML)
-                               resultsDiv.append(linkDiv);
-                               $('#envirotech-results-container').empty().append(resultsDiv);
-                             });
-                           });
+                     $.each(['background_links', 'analysis_links'], function(i, link_type) {
+                       EnvirotechWidget.loadData(link_type, options, function(links) {
+                         $.each(links, function(i, link) {
+                           var linkHTML = '<a target="_blank" href="' + link['url'] + '">' + link['name_' + langKey] + '</a>';
+                           var linkDiv  = $('<div class="row"></div>');
+                           linkDiv.append(linkHTML)
+                           resultsDiv.append(linkDiv);
+                           $('#envirotech-issue-info').empty().append(resultsDiv);
                          });
                        });
-                     }
-                   },
+                     });
+                   }
+                 },
+
+  getSelectedIds: function(type) {
+                    var box = EnvirotechHTMLBuilder.getSelectBoxFor(type);
+                    var ids = [];
+                    if (box.val() == '') {
+                      $.each(box.find('option'), function(i, option) {
+                        if ($(option).attr('value') != '') {
+                          ids.push($(option).attr('value'));
+                        }
+                      });
+                    } else {
+                      ids.push(box.val());
+                    }
+                    return ids;
+                  },
+
+  loadRegulationsInfo: function() {
+                         var container = $('#envirotech-regulations-container');
+                         var regulationIds = EnvirotechHTMLBuilder.getSelectedIds('regulations');
+                         var solutionsBox  = EnvirotechHTMLBuilder.getSelectBoxFor('solutions');
+                         var providersBox  = EnvirotechHTMLBuilder.getSelectBoxFor('providers');
+
+                         $.each(regulationIds, function(i, regulationId) {
+                           var table_id = 'regulation-table-' + regulationId;
+                           container.append('<div id="' + table_id + '"</div>');
+                           var regulation = EnvirotechActiveRecord.findById('regulations', regulationId);
+                           if (regulation) {
+
+                             var params = {
+                               size: EnvirotechHTMLBuilder.veryLargeInt,
+                               solution_ids: regulation.solution_ids.join(',')
+                             };
+                             if (solutionsBox.val() != "") {
+                               params['solution_ids'] = solutionsBox.val();
+                             }
+                             if (providersBox.val() != "") {
+                               params['provider_ids'] = providersBox.val();
+                             }
+
+                             EnvirotechWidget.loadData('provider_solutions', params, function(provider_solutions) {
+                               var html = '<h3>' + regulation['name_' + EnvirotechHTMLBuilder.langKey()] + '</h3>';
+                               $.each(provider_solutions, function(i, ps) {
+                                 var provider = EnvirotechActiveRecord.findById('providers', ps.provider_id);
+                                 var solution = EnvirotechActiveRecord.findById('solutions', ps.solution_ids);
+                                 if (provider && solution) {
+                                   html = html + '<div class="row">' +
+                                     '<div class="col-md-6">' + provider.name_english + '</div>' +
+                                     '<div class="col-md-6">' + solution.name_english + '</div>' +
+                                     '</div>';
+                                 }
+                               });
+                               $('#' + table_id).html(html);
+                             });
+                           }
+                         });
+                       },
 
   loadResults: function() {
-                 EnvirotechHTMLBuilder.loadIssuesLinks();
+                 var resultsContainer           = $('#envirotech-results-container');
+                 var issueInfoContainer         = $('<div id="envirotech-issue-info"></div>');
+                 var regulationDetailsContainer = $('<div id="envirotech-regulations-container"></div>');
+
+                 resultsContainer.empty();
+                 resultsContainer.append(issueInfoContainer);
+                 resultsContainer.append(regulationDetailsContainer);
+
+                 EnvirotechHTMLBuilder.loadIssueInfo();
+                 EnvirotechHTMLBuilder.loadRegulationsInfo();
                },
 };
 
