@@ -2,16 +2,16 @@ var EnvirotechHTMLBuilder = {
   veryLargeInt: 999999,
   resultsPerPage: 25,
 
-  translate: function(key) {
+  translate: function (key) {
               var langCode = window.envirotechLangCode;
               return window.envirotechLangConf[langCode][key];
             },
 
-  langKey: function() {
+  langKey: function () {
              return EnvirotechHTMLBuilder.translate('key');
            },
 
-  resultsDivId: function(regulationId) {
+  resultsDivId: function (regulationId) {
                   return 'enviro-regulation-table-' + regulationId;
                 },
 
@@ -19,9 +19,9 @@ var EnvirotechHTMLBuilder = {
                    return 'enviro-results-list-' + regulationId;
                  },
 
-  searchForm: function() {
+  searchForm: function () {
                 var searchForm = $('<form>');
-                searchForm.on('submit', function(e) {
+                searchForm.on('submit', function (e) {
                   e.preventDefault();
                   EnvirotechHTMLBuilder.loadResults();
                   return false;
@@ -45,19 +45,19 @@ var EnvirotechHTMLBuilder = {
                 return searchForm;
               },
 
-  getSelectBoxFor: function(type) {
+  getSelectBoxFor: function (type) {
                      return $('select[name=envirotech-select-' + type + ']');
                    },
 
-  emptyOptionHTML: function() {
+  emptyOptionHTML: function () {
                      return '<option value="">' + EnvirotechHTMLBuilder.translate('select_an_option') + '</option>';
                    },
 
-  buildOptionHTML: function(value, text) {
+  buildOptionHTML: function (value, text) {
                      return '<option value="' + value + '">' + text + '</option>'
                    },
 
-  formGroupFor: function(type) {
+  formGroupFor: function (type) {
                   var name = 'envirotech-select-' + type;
                   var formGroup = $('<div class="form-group col-xs-4">' +
                       '<label for="'+name+'">'+EnvirotechHTMLBuilder.translate(type)+'</label>' +
@@ -66,7 +66,7 @@ var EnvirotechHTMLBuilder = {
                   return formGroup;
                 },
 
-  selectBoxFor: function(type) {
+  selectBoxFor: function (type) {
                   var name = 'envirotech-select-' + type;
                   var box = $('<select class="form-control" name="' + name + '" id=' + name + '">').prop("disabled", "disabled");
                   box.append(EnvirotechHTMLBuilder.emptyOptionHTML());
@@ -75,18 +75,18 @@ var EnvirotechHTMLBuilder = {
                     size: EnvirotechHTMLBuilder.veryLargeInt
                   };
 
-                  EnvirotechWidget.loadData(type, options, function(data) {
+                  EnvirotechWidget.loadData(type, options, function (data) {
                     EnvirotechHTMLBuilder.loadDataInto(type, data);
                   }, true);
 
-                  box.on("change", function(e) {
+                  box.on("change", function (e) {
                     EnvirotechHTMLBuilder.loadOptionsFor(box, type);
                   });
 
                   return box;
                 },
 
-  loadOptionsFor: function(box, type) {
+  loadOptionsFor: function (box, type) {
                     switch(type) {
                       case 'issues':
                         EnvirotechHTMLBuilder.loadOptionsForIssues(box);
@@ -105,7 +105,7 @@ var EnvirotechHTMLBuilder = {
                     }
                   },
 
-  loadOptionsForIssues: function(box) {
+  loadOptionsForIssues: function (box) {
                           EnvirotechHTMLBuilder.disableBoxesFor(['regulations', 'solutions', 'providers']);
 
                           var options = {
@@ -114,31 +114,31 @@ var EnvirotechHTMLBuilder = {
                           };
 
                           // Load regulations
-                          EnvirotechWidget.loadData('regulations', options, function(regulations) {
+                          EnvirotechWidget.loadData('regulations', options, function (regulations) {
                             EnvirotechHTMLBuilder.loadDataInto('regulations', regulations);
                           });
 
                           // Load solutions
-                          EnvirotechWidget.loadData('solutions', options, function(solutions) {
+                          EnvirotechWidget.loadData('solutions', options, function (solutions) {
                             EnvirotechHTMLBuilder.loadDataInto('solutions', solutions);
                             var ps_options = {
                               size: EnvirotechHTMLBuilder.veryLargeInt,
                               solution_ids: EnvirotechUtility.collectFromArray(solutions, 'source_id').join(',')
                             };
 
-                            EnvirotechWidget.loadData('provider_solutions', ps_options, function(provider_solutions) {
+                            EnvirotechWidget.loadData('provider_solutions', ps_options, function (provider_solutions) {
                               var p_options = {
                                 size: EnvirotechHTMLBuilder.veryLargeInt,
                                 source_ids: EnvirotechUtility.collectFromArray(provider_solutions, 'provider_id').join(',')
                               };
-                              EnvirotechWidget.loadData('providers', p_options, function(providers) {
+                              EnvirotechWidget.loadData('providers', p_options, function (providers) {
                                 EnvirotechHTMLBuilder.loadDataInto('providers', providers);
                               });
                             });
                           });
                         },
 
-  loadOptionsForRegulations: function(box) {
+  loadOptionsForRegulations: function (box) {
                                EnvirotechHTMLBuilder.disableBoxesFor(['issues', 'solutions', 'providers']);
 
                                var options = {
@@ -147,58 +147,58 @@ var EnvirotechHTMLBuilder = {
                                };
 
                                //Load issues
-                               EnvirotechWidget.loadData('issues', options, function(issues) {
+                               EnvirotechWidget.loadData('issues', options, function (issues) {
                                  EnvirotechHTMLBuilder.loadDataInto('issues', issues);
                                });
 
                                // Load solutions
-                               EnvirotechWidget.loadData('solutions', options, function(solutions) {
+                               EnvirotechWidget.loadData('solutions', options, function (solutions) {
                                  EnvirotechHTMLBuilder.loadDataInto('solutions', solutions);
                                  var ps_options = {
                                    size: EnvirotechHTMLBuilder.veryLargeInt,
                                    solution_ids: EnvirotechUtility.collectFromArray(solutions, 'source_id').join(',')
                                  };
 
-                                 EnvirotechWidget.loadData('provider_solutions', ps_options, function(provider_solutions) {
+                                 EnvirotechWidget.loadData('provider_solutions', ps_options, function (provider_solutions) {
                                    var p_options = {
                                      size: EnvirotechHTMLBuilder.veryLargeInt,
                                      source_ids: EnvirotechUtility.collectFromArray(provider_solutions, 'provider_id').join(',')
                                    };
-                                   EnvirotechWidget.loadData('providers', p_options, function(providers) {
+                                   EnvirotechWidget.loadData('providers', p_options, function (providers) {
                                      EnvirotechHTMLBuilder.loadDataInto('providers', providers);
                                    });
                                  });
                                });
                              },
 
-  loadOptionsForSolutions: function(box) {
+  loadOptionsForSolutions: function (box) {
                              EnvirotechHTMLBuilder.disableBoxesFor(['providers']);
                              var options = {
                                size: EnvirotechHTMLBuilder.veryLargeInt,
                                solution_ids: box.val()
                              };
 
-                             EnvirotechWidget.loadData('provider_solutions', options, function(provider_solutions) {
+                             EnvirotechWidget.loadData('provider_solutions', options, function (provider_solutions) {
                                var p_options = {
                                  size: EnvirotechHTMLBuilder.veryLargeInt,
                                  source_ids: EnvirotechUtility.collectFromArray(provider_solutions, 'provider_id').join(',')
                                };
-                               EnvirotechWidget.loadData('providers', p_options, function(providers) {
+                               EnvirotechWidget.loadData('providers', p_options, function (providers) {
                                  EnvirotechHTMLBuilder.loadDataInto('providers', providers);
                                });
                              });
                            },
 
-  loadOptionsForProviders: function(box) {
+  loadOptionsForProviders: function (box) {
                            },
 
-  loadDataInto: function(type, data) {
+  loadDataInto: function (type, data) {
               var box = EnvirotechHTMLBuilder.getSelectBoxFor(type);
               var langKey = EnvirotechHTMLBuilder.langKey();
 
               box.empty().append(EnvirotechHTMLBuilder.emptyOptionHTML());
 
-              $.each(data, function(i, record) {
+              $.each(data, function (i, record) {
                 var optionHTML = EnvirotechHTMLBuilder.buildOptionHTML(record['source_id'], record['name_' + langKey]);
                 box.append(optionHTML);
               });
@@ -210,36 +210,36 @@ var EnvirotechHTMLBuilder = {
               box.prop("disabled", false);
             },
 
-  disableBoxesFor: function(types) {
-                     $.each(types, function(i, type) {
+  disableBoxesFor: function (types) {
+                     $.each(types, function (i, type) {
                        var box = EnvirotechHTMLBuilder.getSelectBoxFor(type);
                        box.prop("disabled", "disabled").trigger("chosen:updated");
                      });
                    },
 
-  submitBtn: function() {
+  submitBtn: function () {
                return '<div class="form-actions col-xs-8">' +
                  '<input type="submit" class="btn btn-primary btn-lg" value="' + EnvirotechHTMLBuilder.translate('submit') + '">' +
                  '<input type="reset" class="btn btn-default btn-lg" value="' + EnvirotechHTMLBuilder.translate('clear') + '">' +
                '</div>';
              },
 
-  languageSelection: function() {
+  languageSelection: function () {
                        var buttons = $('<div>');
                        buttons.append(EnvirotechHTMLBuilder.languageButtons());
                        return buttons;
                      },
 
-  languageButtons: function() {
+  languageButtons: function () {
                      var buttonsHTML = $('<span>');
 
-                     $.each(window.envirotechLangConf, function(langCode, conf) {
+                     $.each(window.envirotechLangConf, function (langCode, conf) {
                        var button = $('<a href="#">')
                        .addClass('btn btn-default')
                        .html(conf['name'])
                        .data('lang_code', langCode);
 
-                       button.on("click", function(e) {
+                       button.on("click", function (e) {
                          e.preventDefault();
                          window.envirotechLangCode = $(this).data('lang_code');
                          EnvirotechWidget.initialize();
@@ -251,7 +251,7 @@ var EnvirotechHTMLBuilder = {
                      return buttonsHTML;
                    },
 
-  searchPanel: function() {
+  searchPanel: function () {
                  var panel = $('<div class="panel panel-default">');
                  panel.append(
                    $('<div class="panel-heading">' +
@@ -264,12 +264,12 @@ var EnvirotechHTMLBuilder = {
                  return panel;
                },
 
-  resultsContainer: function() {
+  resultsContainer: function () {
                       var container = $('<div class="container" id="envirotech-results-container"></div>');
                       return container;
                     },
 
-  loadIssueInfo: function() {
+  loadIssueInfo: function () {
                    var issuesBox = EnvirotechHTMLBuilder.getSelectBoxFor('issues');
                    if (issuesBox.val() != "") {
                      var issue      = EnvirotechActiveRecord.findById('issues', issuesBox.val());
@@ -283,9 +283,9 @@ var EnvirotechHTMLBuilder = {
                        issue_ids: issue.source_id
                      };
 
-                     $.each(['background_links', 'analysis_links'], function(i, link_type) {
-                       EnvirotechWidget.loadData(link_type, options, function(links) {
-                         $.each(links, function(i, link) {
+                     $.each(['background_links', 'analysis_links'], function (i, link_type) {
+                       EnvirotechWidget.loadData(link_type, options, function (links) {
+                         $.each(links, function (i, link) {
                            var linkHTML = '<a target="_blank" href="' + link['url'] + '">' + link['name_' + langKey] + '</a>';
                            var linkDiv  = $('<div class="row"></div>');
                            linkDiv.append(linkHTML)
@@ -297,11 +297,11 @@ var EnvirotechHTMLBuilder = {
                    }
                  },
 
-  getSelectedIds: function(type) {
+  getSelectedIds: function (type) {
                     var box = EnvirotechHTMLBuilder.getSelectBoxFor(type);
                     var ids = [];
                     if (box.val() == '') {
-                      $.each(box.find('option'), function(i, option) {
+                      $.each(box.find('option'), function (i, option) {
                         if ($(option).attr('value') != '') {
                           ids.push($(option).attr('value'));
                         }
@@ -312,17 +312,17 @@ var EnvirotechHTMLBuilder = {
                     return ids;
                   },
 
-  loadRegulationsInfo: function() {
+  loadRegulationsInfo: function () {
                          var container = $('#envirotech-regulations-container');
                          var regulationIds = EnvirotechHTMLBuilder.getSelectedIds('regulations');
                          var solutionsBox  = EnvirotechHTMLBuilder.getSelectBoxFor('solutions');
                          var providersBox  = EnvirotechHTMLBuilder.getSelectBoxFor('providers');
 
-                         $.each(regulationIds, function(i, regulationId) {
+                         $.each(regulationIds, function (i, regulationId) {
                            var table_id = EnvirotechHTMLBuilder.resultsDivId(regulationId);
                            container.append('<div id="' + table_id + '"</div>');
                          });
-                         $.each(regulationIds, function(i, regulationId) {
+                         $.each(regulationIds, function (i, regulationId) {
                            var table_id = EnvirotechHTMLBuilder.resultsDivId(regulationId);
                            var regulation = EnvirotechActiveRecord.findById('regulations', regulationId);
                            if (regulation) {
@@ -337,7 +337,7 @@ var EnvirotechHTMLBuilder = {
                                params['provider_ids'] = providersBox.val();
                              }
 
-                             EnvirotechWidget.loadData('provider_solutions', params, function(provider_solutions, total) {
+                             EnvirotechWidget.loadData('provider_solutions', params, function (provider_solutions, total) {
                                var html = '<h3>' + regulation['name_' + EnvirotechHTMLBuilder.langKey()] + '</h3>';
                                html = html + '<div class="enviro-list" id="' + EnvirotechHTMLBuilder.resultsListId(regulationId) + '"></div>';
                                $('#' + table_id).html(html);
@@ -349,7 +349,7 @@ var EnvirotechHTMLBuilder = {
 
   resultsListHTML: function (provider_solutions) {
                      var html = "";
-                     $.each(provider_solutions, function(i, ps) {
+                     $.each(provider_solutions, function (i, ps) {
                        var provider = EnvirotechActiveRecord.findById('providers', ps.provider_id);
                        var solution = EnvirotechActiveRecord.findById('solutions', ps.solution_ids);
                        if (provider && solution) {
@@ -366,12 +366,12 @@ var EnvirotechHTMLBuilder = {
               params['size']   = EnvirotechHTMLBuilder.resultsPerPage;
               params['offset'] = (page - 1) * EnvirotechHTMLBuilder.resultsPerPage;
               var container = $('#' + EnvirotechHTMLBuilder.resultsListId(regulationId));
-              EnvirotechWidget.loadData('provider_solutions', params, function(provider_solutions) {
+              EnvirotechWidget.loadData('provider_solutions', params, function (provider_solutions) {
                 container.html(EnvirotechHTMLBuilder.resultsListHTML(provider_solutions));
               });
             },
 
-  buildPaginationDiv: function(params, total, regulationId) {
+  buildPaginationDiv: function (params, total, regulationId) {
                         var paginationDiv = $('<div class="envirotech-search-widget-pagination" id="regulation-paging-' +
                             regulationId + '"></div>');
 
@@ -405,7 +405,7 @@ var EnvirotechHTMLBuilder = {
                         return paginationDiv;
                       },
 
-  loadResults: function() {
+  loadResults: function () {
                  var resultsContainer           = $('#envirotech-results-container');
                  var issueInfoContainer         = $('<div id="envirotech-issue-info"></div>');
                  var regulationDetailsContainer = $('<div id="envirotech-regulations-container"></div>');
@@ -420,10 +420,10 @@ var EnvirotechHTMLBuilder = {
 };
 
 var EnvirotechUtility = {
-  collectFromArray: function(arr, key) {
+  collectFromArray: function (arr, key) {
                       var ret = [];
 
-                      $.each(arr, function(i, v) {
+                      $.each(arr, function (i, v) {
                         ret.push(v[key]);
                       });
 
