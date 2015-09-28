@@ -12,8 +12,12 @@ var EnvirotechHTMLBuilder = {
            },
 
   resultsDivId: function(regulationId) {
-                  return 'regulation-table-' + regulationId;
+                  return 'enviro-regulation-table-' + regulationId;
                 },
+
+  resultsListId: function (regulationId) {
+                   return 'enviro-results-list-' + regulationId;
+                 },
 
   searchForm: function() {
                 var searchForm = $('<form>');
@@ -322,7 +326,6 @@ var EnvirotechHTMLBuilder = {
                            var table_id = EnvirotechHTMLBuilder.resultsDivId(regulationId);
                            var regulation = EnvirotechActiveRecord.findById('regulations', regulationId);
                            if (regulation) {
-
                              var params = {
                                size: EnvirotechHTMLBuilder.resultsPerPage,
                                solution_ids: regulation.solution_ids.join(',')
@@ -336,24 +339,39 @@ var EnvirotechHTMLBuilder = {
 
                              EnvirotechWidget.loadData('provider_solutions', params, function(provider_solutions, total) {
                                var html = '<h3>' + regulation['name_' + EnvirotechHTMLBuilder.langKey()] + '</h3>';
-                               $.each(provider_solutions, function(i, ps) {
-                                 var provider = EnvirotechActiveRecord.findById('providers', ps.provider_id);
-                                 var solution = EnvirotechActiveRecord.findById('solutions', ps.solution_ids);
-                                 if (provider && solution) {
-                                   html = html + '<div class="row">' +
-                                     '<div class="col-md-6"><a href="' + ps.url + '">' + provider.name_english + '</a></div>' +
-                                     '<div class="col-md-6">' + solution.name_english + '</div>' +
-                                     '</div>';
-                                 }
-                               });
+                               html = html + '<div class="enviro-list" id="' + EnvirotechHTMLBuilder.resultsListId(regulationId) + '"></div>';
                                $('#' + table_id).html(html);
-                               $('#' + table_id).append(EnvirotechHTMLBuilder.buildPaginationDiv('provider_solutions', params, total, regulationId));
+                               $('#' + table_id).append(EnvirotechHTMLBuilder.buildPaginationDiv(params, total, regulationId));
                              });
                            }
                          });
                        },
 
-  buildPaginationDiv: function(type, params, total, regulationId) {
+  resultsListHTML: function (provider_solutions) {
+                     var html = "";
+                     $.each(provider_solutions, function(i, ps) {
+                       var provider = EnvirotechActiveRecord.findById('providers', ps.provider_id);
+                       var solution = EnvirotechActiveRecord.findById('solutions', ps.solution_ids);
+                       if (provider && solution) {
+                         html = html + '<div class="row">' +
+                           '<div class="col-md-6"><a href="' + ps.url + '">' + provider.name_english + '</a></div>' +
+                           '<div class="col-md-6">' + solution.name_english + '</div>' +
+                           '</div>';
+                       }
+                     });
+                     return html;
+                   },
+
+  loadPage: function (page, params, regulationId) {
+              params['size']   = EnvirotechHTMLBuilder.resultsPerPage;
+              params['offset'] = (page - 1) * EnvirotechHTMLBuilder.resultsPerPage;
+              var container = $('#' + EnvirotechHTMLBuilder.resultsListId(regulationId));
+              EnvirotechWidget.loadData('provider_solutions', params, function(provider_solutions) {
+                container.html(EnvirotechHTMLBuilder.resultsListHTML(provider_solutions));
+              });
+            },
+
+  buildPaginationDiv: function(params, total, regulationId) {
                         var paginationDiv = $('<div class="envirotech-search-widget-pagination" id="regulation-paging-' +
                             regulationId + '"></div>');
 
@@ -363,7 +381,7 @@ var EnvirotechHTMLBuilder = {
                           lapping: 0,
                           page: 1,
                           onSelect: function (page) {
-                            //EnvirotechHTMLBuilder.loadPage(page, type, params, total);
+                            EnvirotechHTMLBuilder.loadPage(page, params, regulationId);
                           },
                           onFormat: function (type) {
                             switch (type) {
