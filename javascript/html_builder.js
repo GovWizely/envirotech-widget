@@ -11,6 +11,10 @@ var EnvirotechHTMLBuilder = {
              return EnvirotechHTMLBuilder.translate('key');
            },
 
+  resultsDivId: function(regulationId) {
+                  return 'regulation-table-' + regulationId;
+                },
+
   searchForm: function() {
                 var searchForm = $('<form>');
                 searchForm.on('submit', function(e) {
@@ -311,13 +315,16 @@ var EnvirotechHTMLBuilder = {
                          var providersBox  = EnvirotechHTMLBuilder.getSelectBoxFor('providers');
 
                          $.each(regulationIds, function(i, regulationId) {
-                           var table_id = 'regulation-table-' + regulationId;
+                           var table_id = EnvirotechHTMLBuilder.resultsDivId(regulationId);
                            container.append('<div id="' + table_id + '"</div>');
+                         });
+                         $.each(regulationIds, function(i, regulationId) {
+                           var table_id = EnvirotechHTMLBuilder.resultsDivId(regulationId);
                            var regulation = EnvirotechActiveRecord.findById('regulations', regulationId);
                            if (regulation) {
 
                              var params = {
-                               size: EnvirotechHTMLBuilder.veryLargeInt,
+                               size: EnvirotechHTMLBuilder.resultsPerPage,
                                solution_ids: regulation.solution_ids.join(',')
                              };
                              if (solutionsBox.val() != "") {
@@ -327,23 +334,58 @@ var EnvirotechHTMLBuilder = {
                                params['provider_ids'] = providersBox.val();
                              }
 
-                             EnvirotechWidget.loadData('provider_solutions', params, function(provider_solutions) {
+                             EnvirotechWidget.loadData('provider_solutions', params, function(provider_solutions, total) {
                                var html = '<h3>' + regulation['name_' + EnvirotechHTMLBuilder.langKey()] + '</h3>';
                                $.each(provider_solutions, function(i, ps) {
                                  var provider = EnvirotechActiveRecord.findById('providers', ps.provider_id);
                                  var solution = EnvirotechActiveRecord.findById('solutions', ps.solution_ids);
                                  if (provider && solution) {
                                    html = html + '<div class="row">' +
-                                     '<div class="col-md-6">' + provider.name_english + '</div>' +
+                                     '<div class="col-md-6"><a href="' + ps.url + '">' + provider.name_english + '</a></div>' +
                                      '<div class="col-md-6">' + solution.name_english + '</div>' +
                                      '</div>';
                                  }
                                });
                                $('#' + table_id).html(html);
+                               $('#' + table_id).append(EnvirotechHTMLBuilder.buildPaginationDiv('provider_solutions', params, total, regulationId));
                              });
                            }
                          });
                        },
+
+  buildPaginationDiv: function(type, params, total, regulationId) {
+                        var paginationDiv = $('<div class="envirotech-search-widget-pagination" id="regulation-paging-' +
+                            regulationId + '"></div>');
+
+                        paginationDiv.paging(total, {
+                          format: '[< nncnn >]',
+                          perpage: EnvirotechHTMLBuilder.resultsPerPage,
+                          lapping: 0,
+                          page: 1,
+                          onSelect: function (page) {
+                            //EnvirotechHTMLBuilder.loadPage(page, type, params, total);
+                          },
+                          onFormat: function (type) {
+                            switch (type) {
+                              case 'block': // n and c
+                                if (this.value == this.page) {
+                                  return '<span class="current">' + this.value + '</span>';
+                                } else {
+                                  return '<a href="#">' + this.value + '</a>';
+                                }
+                              case 'next': // >
+                                return '<a href="#">&gt;</a>';
+                              case 'prev': // <
+                                return '<a href="#">&lt;</a>';
+                              case 'first': // [
+                                return '<a href="#">First</a>';
+                              case 'last': // ]
+                                return '<a href="#">Last</a>';
+                            }
+                          }
+                        });
+                        return paginationDiv;
+                      },
 
   loadResults: function() {
                  var resultsContainer           = $('#envirotech-results-container');
