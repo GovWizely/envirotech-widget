@@ -357,6 +357,8 @@ var EnvirotechHTMLBuilder = {
 
                              EnvirotechWidget.loadData('provider_solutions', params, function (provider_solutions, total) {
                                var html = '<h3>' + regulation['name_' + EnvirotechHTMLBuilder.langKey()] + '</h3>';
+                               html = html + '<a href="' + regulation['url'] + '">' +
+                                 regulation['name_' + EnvirotechHTMLBuilder.langKey()] + '</a>';
                                html = html + '<div class="enviro-list" id="' + EnvirotechHTMLBuilder.resultsListId(regulationId) + '"></div>';
                                $('#' + table_id).html(html);
                                $('#' + table_id).append(EnvirotechHTMLBuilder.buildPaginationDiv(params, total, regulationId));
@@ -366,14 +368,18 @@ var EnvirotechHTMLBuilder = {
                        },
 
   resultsListHTML: function (provider_solutions) {
-                     var html = "";
+                     var html = '<div class="row envirotech-list-header">' +
+                       '<div class="col-md-6">Environmental Solution</div>' +
+                       '<div class="col-md-6">U.S. Solution Provider</div>' +
+                       '</div>';
+                     var langKey = EnvirotechHTMLBuilder.langKey();
                      $.each(provider_solutions, function (i, ps) {
                        var provider = EnvirotechActiveRecord.findById('providers', ps.provider_id);
                        var solution = EnvirotechActiveRecord.findById('solutions', ps.solution_ids);
                        if (provider && solution) {
                          html = html + '<div class="row">' +
+                           '<div class="col-md-6">' + solution['name_' + langKey] + '</div>' +
                            '<div class="col-md-6"><a href="' + ps.url + '">' + provider.name_english + '</a></div>' +
-                           '<div class="col-md-6">' + solution.name_english + '</div>' +
                            '</div>';
                        }
                      });
