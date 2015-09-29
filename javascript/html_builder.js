@@ -172,6 +172,8 @@ var EnvirotechHTMLBuilder = {
                              },
 
   loadOptionsForSolutions: function (box) {
+                             EnvirotechHTMLBuilder.disableBoxesFor(['regulations']);
+                             EnvirotechHTMLBuilder.disableBoxesFor(['issues']);
                              EnvirotechHTMLBuilder.disableBoxesFor(['providers']);
                              var options = {
                                size: EnvirotechHTMLBuilder.veryLargeInt,
@@ -185,6 +187,22 @@ var EnvirotechHTMLBuilder = {
                                };
                                EnvirotechWidget.loadData('providers', p_options, function (providers) {
                                  EnvirotechHTMLBuilder.loadDataInto('providers', providers);
+                               });
+                             });
+
+                             EnvirotechWidget.loadData('regulations', options, function (regulations) {
+                               EnvirotechHTMLBuilder.loadDataInto('regulations', regulations);
+                               var issue_ids = [];
+                               $.each(regulations, function(i, regulation) {
+                                 issue_ids.push(regulation.issue_ids.join(","));
+                               });
+
+                               var i_options = {
+                                 size: EnvirotechHTMLBuilder.veryLargeInt,
+                                 source_ids: issue_ids.join(",")
+                               };
+                               EnvirotechWidget.loadData('issues', i_options, function(issues) {
+                                 EnvirotechHTMLBuilder.loadDataInto('issues', issues);
                                });
                              });
                            },
