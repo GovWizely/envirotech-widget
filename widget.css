@@ -5237,6 +5237,17 @@
       display: none !important; } }
   .envirotech-widget-container a.btn {
     margin: 0 5px 5px 0; }
+  .envirotech-widget-container h3 {
+    margin-top: 10px; }
+  .envirotech-widget-container #envirotech-results-container table.enviro-list {
+    margin-bottom: 0; }
+  .envirotech-widget-container #envirotech-results-container nav.container {
+    margin-bottom: 30px;
+    margin-top: 10px; }
+    .envirotech-widget-container #envirotech-results-container nav.container ul.pagination {
+      margin-top: 5px; }
+  .envirotech-widget-container #envirotech-results-container .summary {
+    line-height: 2.5em; }
   .envirotech-widget-container .panel-default > .panel-heading {
     background-color: #585858;
     color: white; }
