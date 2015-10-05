@@ -20,7 +20,7 @@ var EnvirotechWidget = {
                 dataType: 'json',
                 success: function(data) {
                   if (storeResult) { EnvirotechActiveRecord.data[type] = data.results; }
-                  callback(data.results, data.total);
+                  callback(data.results, data.total, data.offset);
                 },
               });
             },

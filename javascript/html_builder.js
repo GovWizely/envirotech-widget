@@ -12,11 +12,11 @@ var EnvirotechHTMLBuilder = {
            },
 
   resultsDivId: function (regulationId) {
-                  return 'enviro-regulation-table-' + regulationId;
+                  return 'enviro-regulation-div-' + regulationId;
                 },
 
-  resultsListId: function (regulationId) {
-                   return 'enviro-results-list-' + regulationId;
+  resultsTableId: function (regulationId) {
+                   return 'enviro-results-table-' + regulationId;
                  },
 
   searchForm: function () {
@@ -283,7 +283,7 @@ var EnvirotechHTMLBuilder = {
                },
 
   resultsContainer: function () {
-                      var container = $('<div class="container" id="envirotech-results-container"></div>');
+                      var container = $('<div id="envirotech-results-container"></div>');
                       return container;
                     },
 
@@ -337,11 +337,11 @@ var EnvirotechHTMLBuilder = {
                          var providersBox  = EnvirotechHTMLBuilder.getSelectBoxFor('providers');
 
                          $.each(regulationIds, function (i, regulationId) {
-                           var table_id = EnvirotechHTMLBuilder.resultsDivId(regulationId);
-                           container.append('<div id="' + table_id + '"</div>');
+                           var tableId = EnvirotechHTMLBuilder.resultsDivId(regulationId);
+                           container.append('<div id="' + tableId + '"></div>');
                          });
                          $.each(regulationIds, function (i, regulationId) {
-                           var table_id = EnvirotechHTMLBuilder.resultsDivId(regulationId);
+                           var table = $('#' + EnvirotechHTMLBuilder.resultsDivId(regulationId));
                            var regulation = EnvirotechActiveRecord.findById('regulations', regulationId);
                            if (regulation) {
                              var params = {
@@ -355,32 +355,30 @@ var EnvirotechHTMLBuilder = {
                                params['provider_ids'] = providersBox.val();
                              }
 
-                             EnvirotechWidget.loadData('provider_solutions', params, function (provider_solutions, total) {
-                               var html = '<h3>' + regulation['name_' + EnvirotechHTMLBuilder.langKey()] + '</h3>';
-                               html = html + '<a href="' + regulation['url'] + '">' +
-                                 regulation['name_' + EnvirotechHTMLBuilder.langKey()] + '</a>';
-                               html = html + '<div class="enviro-list" id="' + EnvirotechHTMLBuilder.resultsListId(regulationId) + '"></div>';
-                               $('#' + table_id).html(html);
-                               $('#' + table_id).append(EnvirotechHTMLBuilder.buildPaginationDiv(params, total, regulationId));
+                             EnvirotechWidget.loadData('provider_solutions', params, function (provider_solutions, total, offset) {
+                               var html =
+                                '<p class="small">Select an Environmental Issue above for more information on Solutions.</p>' +
+                                '<h3>' + regulation['name_' + EnvirotechHTMLBuilder.langKey()] + '</h3>' +
+                                '<p><a href="' + regulation['url'] + '">' + regulation['name_' + EnvirotechHTMLBuilder.langKey()] + '</a></p>' +
+                                '<table class="enviro-list table table-striped" id="' + EnvirotechHTMLBuilder.resultsTableId(regulationId) + '"></table>';
+                               table.append(html);
+                               table.append(EnvirotechHTMLBuilder.buildPaginationNav(params, offset, total, regulationId));
                              });
                            }
                          });
                        },
 
   resultsListHTML: function (provider_solutions) {
-                     var html = '<div class="row envirotech-list-header">' +
-                       '<div class="col-md-6">Environmental Solution</div>' +
-                       '<div class="col-md-6">U.S. Solution Provider</div>' +
-                       '</div>';
+                     var html = '<tr><th>Environmental Solution</th><th>U.S. Solution Provider</th></tr>';
                      var langKey = EnvirotechHTMLBuilder.langKey();
                      $.each(provider_solutions, function (i, ps) {
                        var provider = EnvirotechActiveRecord.findById('providers', ps.provider_id);
                        var solution = EnvirotechActiveRecord.findById('solutions', ps.solution_ids);
                        if (provider && solution) {
-                         html = html + '<div class="row">' +
-                           '<div class="col-md-6">' + solution['name_' + langKey] + '</div>' +
-                           '<div class="col-md-6"><a href="' + ps.url + '">' + provider.name_english + '</a></div>' +
-                           '</div>';
+                         html = html + '<tr>' +
+                           '<td>' + solution['name_' + langKey] + '</td>' +
+                           '<td><a href="' + ps.url + '">' + provider.name_english + '</a></td>' +
+                           '</tr>';
                        }
                      });
                      return html;
@@ -389,17 +387,31 @@ var EnvirotechHTMLBuilder = {
   loadPage: function (page, params, regulationId) {
               params['size']   = EnvirotechHTMLBuilder.resultsPerPage;
               params['offset'] = (page - 1) * EnvirotechHTMLBuilder.resultsPerPage;
-              var container = $('#' + EnvirotechHTMLBuilder.resultsListId(regulationId));
+              var resultsTable = $('#' + EnvirotechHTMLBuilder.resultsTableId(regulationId));
               EnvirotechWidget.loadData('provider_solutions', params, function (provider_solutions) {
-                container.html(EnvirotechHTMLBuilder.resultsListHTML(provider_solutions));
+                var nav = resultsTable.siblings('nav.container');
+                nav.find('div.summary .start').html(params.offset + 1);
+                nav.find('div.summary .end').html(params.offset + params.size);
+
+                resultsTable.html(EnvirotechHTMLBuilder.resultsListHTML(provider_solutions));
               });
             },
 
-  buildPaginationDiv: function (params, total, regulationId) {
-                        var paginationDiv = $('<div class="envirotech-search-widget-pagination" id="regulation-paging-' +
-                            regulationId + '"></div>');
+  buildPaginationNav: function (params, offset, total, regulationId) {
+                        var start = offset + 1;
+                        var end = offset + params.size;
+                        var nav = $('<nav class="container"></nav>');
+                        var row = $('<div class="row"><div class="small summary col-xs-3"><span class="start">' + start + '</span> - <span class="end">' + end + '</span> of ' + total + '</div></div>');
+                        row.append(EnvirotechHTMLBuilder.buildPaginationUl(params, total, regulationId));
+                        nav.append(row);
+                        return nav;
+  },
 
-                        paginationDiv.paging(total, {
+  buildPaginationUl: function (params, total, regulationId) {
+                        var paginationUl = $('<ul class="pagination envirotech-search-widget-pagination" id="regulation-paging-' +
+                            regulationId + '"></ul>');
+
+                        paginationUl.paging(total, {
                           format: '[< nncnn >]',
                           perpage: EnvirotechHTMLBuilder.resultsPerPage,
                           lapping: 0,
@@ -411,22 +423,22 @@ var EnvirotechHTMLBuilder = {
                             switch (type) {
                               case 'block': // n and c
                                 if (this.value == this.page) {
-                                  return '<span class="current">' + this.value + '</span>';
+                                  return '<li class="active"><a href="#">' + this.value + '</a></li>';
                                 } else {
-                                  return '<a href="#">' + this.value + '</a>';
+                                  return '<li><a href="#">' + this.value + '</a></li>';
                                 }
                               case 'next': // >
-                                return '<a href="#">&gt;</a>';
+                                return '<li><a href="#">&gt;</a></li>';
                               case 'prev': // <
-                                return '<a href="#">&lt;</a>';
+                                return '<li><a href="#">&lt;</a></li>';
                               case 'first': // [
-                                return '<a href="#">First</a>';
+                                return '<li><a href="#">First</a></li>';
                               case 'last': // ]
-                                return '<a href="#">Last</a>';
+                                return '<li><a href="#">Last</a></li>';
                             }
                           }
                         });
-                        return paginationDiv;
+                        return $('<div class="col-xs-9"></div>').append(paginationUl);
                       },
 
   loadResults: function () {

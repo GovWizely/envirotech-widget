@@ -14,6 +14,26 @@ $PANEL_BODY_BACKGROUND: #f5f5f5;
     }
   }
 
+  h3 {
+    margin-top: 10px;
+  }
+
+  #envirotech-results-container {
+    table.enviro-list {
+      margin-bottom: 0;
+    }
+    nav.container {
+      margin-bottom: 30px;
+      margin-top: 10px;
+      ul.pagination {
+        margin-top: 5px;
+      }
+    }
+    .summary {
+      line-height: 2.5em;
+    }
+  }
+
   .panel-default {
     > .panel-heading {
       background-color: $PANEL_HEADING_BACKGROUND;
