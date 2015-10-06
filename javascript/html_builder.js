@@ -395,6 +395,7 @@ var EnvirotechHTMLBuilder = {
               params['size']   = EnvirotechHTMLBuilder.resultsPerPage;
               params['offset'] = (page - 1) * EnvirotechHTMLBuilder.resultsPerPage;
               var resultsTable = $('#' + EnvirotechHTMLBuilder.resultsTableId(regulationId));
+              resultsTable.empty().append(EnvirotechHTMLBuilder.buildSpinner());
               EnvirotechWidget.loadData('provider_solutions', params, function (provider_solutions) {
                 var nav = resultsTable.siblings('nav.container');
                 nav.find('div.summary .start').html(params.offset + 1);
@@ -447,6 +448,16 @@ var EnvirotechHTMLBuilder = {
                         });
                         return $('<div class="col-xs-9"></div>').append(paginationUl);
                       },
+
+  buildSpinner: function() {
+                  return $('<div class="spinner">' +
+                      '<div class="rect1"></div>' +
+                      '<div class="rect2"></div>' +
+                      '<div class="rect3"></div>' +
+                      '<div class="rect4"></div>' +
+                      '<div class="rect5"></div>' +
+                      '</div>');
+                },
 
   loadResults: function () {
                  var resultsContainer           = $('#envirotech-results-container');
