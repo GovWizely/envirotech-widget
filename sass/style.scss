@@ -21,6 +21,9 @@ $PANEL_BODY_BACKGROUND: #f5f5f5;
   #envirotech-results-container {
     table.enviro-list {
       margin-bottom: 0;
+      tr.envirotech-list-header {
+        background-color: gray;
+      }
     }
     nav.container {
       margin-bottom: 30px;

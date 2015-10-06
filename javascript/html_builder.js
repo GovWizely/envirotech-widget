@@ -356,20 +356,27 @@ var EnvirotechHTMLBuilder = {
                              }
 
                              EnvirotechWidget.loadData('provider_solutions', params, function (provider_solutions, total, offset) {
-                               var html =
-                                '<p class="small">Select an Environmental Issue above for more information on Solutions.</p>' +
-                                '<h3>' + regulation['name_' + EnvirotechHTMLBuilder.langKey()] + '</h3>' +
-                                '<p><a href="' + regulation['url'] + '">' + regulation['name_' + EnvirotechHTMLBuilder.langKey()] + '</a></p>' +
-                                '<table class="enviro-list table table-striped" id="' + EnvirotechHTMLBuilder.resultsTableId(regulationId) + '"></table>';
-                               table.append(html);
-                               table.append(EnvirotechHTMLBuilder.buildPaginationNav(params, offset, total, regulationId));
+                               if (total > 0) {
+                                 var regulationName = regulation['name_' + EnvirotechHTMLBuilder.langKey()];
+                                 if (!regulationName) {
+                                   regulationName = regulation['name_english'];
+                                 }
+                                 var html =
+                                  '<p class="small">Select an Environmental Issue above for more information on Solutions.</p>' +
+                                  '<h3>' + regulationName + '</h3>' +
+                                  '<p><a href="' + regulation['url'] + '">' + regulationName + '</a></p>' +
+                                  '<table class="enviro-list table table-striped" id="' + EnvirotechHTMLBuilder.resultsTableId(regulationId) + '"></table>';
+                                 table.append(html);
+                                 var list = $('#' + EnvirotechHTMLBuilder.resultsTableId(regulationId));
+                                 EnvirotechHTMLBuilder.buildPaginationNav(params, offset, total, regulationId).insertBefore(list);
+                               }
                              });
                            }
                          });
                        },
 
   resultsListHTML: function (provider_solutions) {
-                     var html = '<tr><th>Environmental Solution</th><th>U.S. Solution Provider</th></tr>';
+                     var html = '<tr class="envirotech-list-header"><th>Environmental Solution</th><th>U.S. Solution Provider</th></tr>';
                      var langKey = EnvirotechHTMLBuilder.langKey();
                      $.each(provider_solutions, function (i, ps) {
                        var provider = EnvirotechActiveRecord.findById('providers', ps.provider_id);
