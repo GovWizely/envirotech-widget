@@ -12,6 +12,6 @@ var EnvirotechActiveRecord = {
   },
 
   all: function(type) {
-         return EnvirotechActiveRecord.data[type];
-       },
+    return EnvirotechActiveRecord.data[type];
+  },
 };
