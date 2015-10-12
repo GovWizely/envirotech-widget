@@ -223,7 +223,8 @@ var EnvirotechHTMLBuilder = {
     box.empty().append(EnvirotechHTMLBuilder.emptyOptionHTML());
 
     $.each(data, function (i, record) {
-      var optionHTML = EnvirotechHTMLBuilder.buildOptionHTML(record['source_id'], record['name_' + langKey]);
+      var text = record['name_' + langKey] || record['name_english'];
+      var optionHTML = EnvirotechHTMLBuilder.buildOptionHTML(record['source_id'], text);
       box.append(optionHTML);
     });
 
@@ -362,10 +363,7 @@ var EnvirotechHTMLBuilder = {
 
         EnvirotechWidget.loadData('provider_solutions', params, function (provider_solutions, total, offset) {
           if (total > 0) {
-            var regulationName = regulation['name_' + EnvirotechHTMLBuilder.langKey()];
-            if (!regulationName) {
-              regulationName = regulation['name_english'];
-            }
+            var regulationName = regulation['name_' + EnvirotechHTMLBuilder.langKey()] || regulation['name_english'];
             var html =
              '<p class="small">Select an Environmental Issue above for more information on Solutions.</p>' +
              '<h3>' + regulationName + '</h3>' +
