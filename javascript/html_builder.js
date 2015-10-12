@@ -299,9 +299,11 @@ var EnvirotechHTMLBuilder = {
       var issue      = EnvirotechActiveRecord.findById('issues', issuesBox.val());
       var langKey    = EnvirotechHTMLBuilder.langKey();
       var issueName  = issue['name_' + langKey];
-      var resultsDiv = $('<div class="container"></div>');
-      resultsDiv.append('<h3>' + issueName + '</h3>');
-      resultsDiv.append('<div class="row">' + issue['abstract_' + langKey] + '</div>');
+      var issueInfoDiv = $('#envirotech-issue-info');
+
+      issueInfoDiv.empty();
+      issueInfoDiv.append('<h3>' + issueName + '</h3>');
+      issueInfoDiv.append('<p>' + issue['abstract_' + langKey] + '</p>');
       var options = {
         size: EnvirotechHTMLBuilder.veryLargeInt,
         issue_ids: issue.source_id
@@ -310,11 +312,8 @@ var EnvirotechHTMLBuilder = {
       $.each(['background_links', 'analysis_links'], function (i, link_type) {
         EnvirotechWidget.loadData(link_type, options, function (links) {
           $.each(links, function (i, link) {
-            var linkHTML = '<a target="_blank" href="' + link['url'] + '">' + link['name_' + langKey] + '</a>';
-            var linkDiv  = $('<div class="row"></div>');
-            linkDiv.append(linkHTML)
-            resultsDiv.append(linkDiv);
-            $('#envirotech-issue-info').empty().append(resultsDiv);
+            var linkHtml = '<p><a target="_blank" href="' + link['url'] + '">' + link['name_' + langKey] + '</a></p>';
+            issueInfoDiv.append(linkHtml);
           });
         });
       });
