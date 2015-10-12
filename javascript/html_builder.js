@@ -337,7 +337,7 @@ var EnvirotechHTMLBuilder = {
 
     $.each(regulationIds, function (i, regulationId) {
       var tableId = EnvirotechHTMLBuilder.resultsDivId(regulationId);
-      container.append('<div id="' + tableId + '"></div>');
+      container.append('<div class="enviro-regulation-div" id="' + tableId + '"></div>');
     });
     $.each(regulationIds, function (i, regulationId) {
       var table = $('#' + EnvirotechHTMLBuilder.resultsDivId(regulationId));
