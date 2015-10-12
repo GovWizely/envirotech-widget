@@ -21,10 +21,17 @@ var EnvirotechHTMLBuilder = {
 
   searchForm: function () {
     var searchForm = $('<form>');
+
     searchForm.on('submit', function (e) {
       e.preventDefault();
       EnvirotechHTMLBuilder.loadResults();
       return false;
+    });
+
+    searchForm.on('reset', function (e) {
+      $('#envirotech-results-container').empty();
+      var box = $('select#envirotech-select-solutions');
+      EnvirotechHTMLBuilder.loadOptionsFor(box, 'solutions');
     });
 
     var container = $('<div class="container"></div>');
