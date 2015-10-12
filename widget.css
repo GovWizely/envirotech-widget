@@ -5239,15 +5239,18 @@
     margin: 0 5px 5px 0; }
   .envirotech-widget-container h3 {
     margin-top: 10px; }
-  .envirotech-widget-container #envirotech-results-container table.enviro-list {
-    margin-bottom: 0; }
-  .envirotech-widget-container #envirotech-results-container nav.container {
-    margin-bottom: 30px;
-    margin-top: 10px; }
-    .envirotech-widget-container #envirotech-results-container nav.container ul.pagination {
-      margin-top: 5px; }
-  .envirotech-widget-container #envirotech-results-container .summary {
-    line-height: 2.5em; }
+  .envirotech-widget-container #envirotech-results-container .enviro-regulation-div {
+    margin-top: 40px;
+    margin-bottom: 40px; }
+    .envirotech-widget-container #envirotech-results-container .enviro-regulation-div table.enviro-list {
+      margin-bottom: 0; }
+    .envirotech-widget-container #envirotech-results-container .enviro-regulation-div nav.container {
+      margin: 10px 0; }
+      .envirotech-widget-container #envirotech-results-container .enviro-regulation-div nav.container ul.pagination {
+        margin: 5px 0 0; }
+    .envirotech-widget-container #envirotech-results-container .enviro-regulation-div .summary {
+      line-height: 2.5em;
+      padding-left: 0; }
   .envirotech-widget-container .panel-default > .panel-heading {
     background-color: #585858;
     color: white; }
