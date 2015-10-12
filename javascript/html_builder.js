@@ -389,7 +389,7 @@ var EnvirotechHTMLBuilder = {
       if (provider && solution) {
         html = html + '<tr>' +
           '<td>' + solution['name_' + langKey] + '</td>' +
-          '<td><a href="' + ps.url + '">' + provider.name_english + '</a></td>' +
+          '<td><a target="_blank" href="' + ps.url + '">' + provider.name_english + '</a></td>' +
           '</tr>';
       }
     });
