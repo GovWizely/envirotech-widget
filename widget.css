@@ -7,7 +7,10 @@
   /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
   /*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
   width: 780px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 22px;
+  color: black; }
   .envirotech-widget-container html {
     font-family: sans-serif;
     -ms-text-size-adjust: 100%;
@@ -5243,7 +5246,11 @@
     margin-top: 40px;
     margin-bottom: 40px; }
     .envirotech-widget-container #envirotech-results-container .enviro-regulation-div table.enviro-list {
+      display: table;
       margin-bottom: 0; }
+      .envirotech-widget-container #envirotech-results-container .enviro-regulation-div table.enviro-list th, .envirotech-widget-container #envirotech-results-container .enviro-regulation-div table.enviro-list td {
+        border-left: 0;
+        border-right: 0; }
     .envirotech-widget-container #envirotech-results-container .enviro-regulation-div nav.container {
       margin: 10px 0; }
       .envirotech-widget-container #envirotech-results-container .enviro-regulation-div nav.container ul.pagination {
