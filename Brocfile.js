@@ -31,4 +31,9 @@ var html = concat('.', {
   outputFile: '/example.html'
 });
 
-module.exports = mergeTrees([jQuery, appJs, appCss, html])
+var ghPagesHtml = concat('.', {
+  inputFiles: ['gh-pages.html'],
+  outputFile: '/gh-pages.html'
+});
+
+module.exports = mergeTrees([jQuery, appJs, appCss, html, ghPagesHtml])
