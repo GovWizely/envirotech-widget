@@ -15,7 +15,6 @@ var jQuery = concat('javascript', {
 var appJs = concat('.', {
   inputFiles: [
     'javascript/language_config.js',
-    'javascript/html_builder.js',
     'javascript/jquery.paging.js',
     'javascript/widget.js',
     'javascript/active_record.js'
