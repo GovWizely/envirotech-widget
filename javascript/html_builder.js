@@ -364,9 +364,13 @@ var EnvirotechHTMLBuilder = {
         EnvirotechWidget.loadData('provider_solutions', params, function (provider_solutions, total, offset) {
           if (total > 0) {
             var regulationName = regulation['name_' + EnvirotechHTMLBuilder.langKey()] || regulation['name_english'];
-            var html =
-             '<p class="small">Select an Environmental Issue above for more information on Solutions.</p>' +
-             '<h3>' + regulationName + '</h3>' +
+            var html = '';
+
+            if (!EnvirotechHTMLBuilder.getSelectBoxFor('issues').val()) {
+              html = html + '<p class="small">Select an Environmental Issue above for more information on Solutions.</p>';
+            }
+
+            html = html + '<h3>' + regulationName + '</h3>' +
              '<p><a href="' + regulation['url'] + '">' + regulationName + '</a></p>' +
              '<table class="enviro-list table table-striped" id="' + EnvirotechHTMLBuilder.resultsTableId(regulationId) + '"></table>';
             table.append(html);
