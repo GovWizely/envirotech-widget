@@ -18,7 +18,7 @@
 
         var url = widgetOptions.host + searchPath(type);
 
-        if (Object.keys(options).length === 0) {
+        if (type === 'solutions' && Object.keys(options).length === 0) {
           options.size = -1;
         } else if (!options.size) {
           options.size = 100;
