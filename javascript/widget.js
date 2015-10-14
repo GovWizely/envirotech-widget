@@ -136,7 +136,7 @@
             loadOptionsForSolutions(box);
             break;
           case 'providers':
-            loadOptionsForProviders(box);
+            // no-op
             break;
           default:
             console.log("Invalid type");
@@ -249,18 +249,23 @@
 
       // Load select options into select box.
       var loadDataInto = function(type, data) {
-        var box = getSelectBoxFor(type);
-        box.empty().append(emptyOptionHTML());
+        var box = getSelectBoxFor(type),
+            selected = box.val(),
+            langKey = translate('key'),
+            newSelectedValue = '';
 
-        var langKey = translate('key');
+        box.empty().append(emptyOptionHTML());
 
         $.each(data, function(i, record) {
           var text = record['name_' + langKey] || record.name_english;
           var optionHTML = buildOptionHTML(record.source_id, text);
+          if (record.source_id == selected) { newSelectedValue = record.source_id }
           box.append(optionHTML);
         });
 
-        if (data.length == 1) {
+        if (newSelectedValue) {
+          box.val(newSelectedValue);
+        } else if (data.length == 1) {
           box.val(data[0].source_id);
         }
 
