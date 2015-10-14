@@ -3,7 +3,6 @@
     $.fn.envirotechWidget = function(widgetOptions) {
 
       var container = $(this);
-      var veryLargeInt = 100;
       var resultsPerPage = 25;
 
 
@@ -16,8 +15,16 @@
       };
 
       var loadData = function(type, options, callback, storeResult) {
+
         var url = widgetOptions.host + searchPath(type);
+
+        if (Object.keys(options).length === 0) {
+          options.size = -1;
+        } else if (!options.size) {
+          options.size = 100;
+        }
         options.api_key = widgetOptions.apiKey;
+
         $.ajax({
           url: url,
           data: options,
@@ -102,14 +109,10 @@
 
       var selectBoxFor = function(type) {
         var name = 'envirotech-select-' + type;
-        var box = $('<select class="form-control" name="' + name + '" id=' + name + '">').prop("disabled", "disabled");
+        var box = $('<select class="form-control" name="' + name + '" id="' + name + '">').prop("disabled", "disabled");
         box.append(emptyOptionHTML());
 
-        var options = {
-          size: veryLargeInt
-        };
-
-        loadData(type, options, function(data) {
+        loadData(type, {}, function(data) {
           loadDataInto(type, data);
         }, true);
 
@@ -147,8 +150,7 @@
         disableBoxesFor(['regulations', 'solutions', 'providers']);
 
         var options = {
-          issue_ids: box.val(),
-          size: veryLargeInt
+          issue_ids: box.val()
         };
 
         // Load regulations
@@ -160,13 +162,11 @@
         loadData('solutions', options, function(solutions) {
           loadDataInto('solutions', solutions);
           var psOptions = {
-            size: veryLargeInt,
             solution_ids: collectFromArray(solutions, 'source_id').join(',')
           };
 
           loadData('provider_solutions', psOptions, function(providerSolutions) {
             var pOptions = {
-              size: veryLargeInt,
               source_ids: collectFromArray(providerSolutions, 'provider_id').join(',')
             };
             loadData('providers', pOptions, function(providers) {
@@ -181,7 +181,6 @@
 
         var options = {
           regulation_ids: box.val(),
-          size: veryLargeInt
         };
 
         //Load issues
@@ -194,13 +193,11 @@
         loadData('solutions', options, function(solutions) {
           loadDataInto('solutions', solutions);
           var psOptions = {
-            size: veryLargeInt,
             solution_ids: collectFromArray(solutions, 'source_id').join(',')
           };
 
           loadData('provider_solutions', psOptions, function(providerSolutions) {
             var pOptions = {
-              size: veryLargeInt,
               source_ids: collectFromArray(providerSolutions, 'provider_id').join(',')
             };
             loadData('providers', pOptions, function(providers) {
@@ -214,13 +211,11 @@
         disableBoxesFor(['regulations', 'issues', 'providers']);
 
         var options = {
-          size: veryLargeInt,
           solution_ids: box.val()
         };
 
         loadData('provider_solutions', options, function(providerSolutions) {
           var pOptions = {
-            size: veryLargeInt,
             source_ids: collectFromArray(providerSolutions, 'provider_id').join(',')
           };
           loadData('providers', pOptions, function(providers) {
@@ -236,7 +231,6 @@
           });
 
           var iOptions = {
-            size: veryLargeInt,
             source_ids: issueIds.join(",")
           };
 
@@ -346,7 +340,6 @@
           issueInfoDiv.append('<h3>' + issueName + '</h3>');
           issueInfoDiv.append('<p>' + issue['abstract_' + langKey] + '</p>');
           var options = {
-            size: veryLargeInt,
             issue_ids: issue.source_id
           };
 
@@ -391,7 +384,6 @@
           var regulation = EnvirotechActiveRecord.findById('regulations', regulationId);
           if (regulation) {
             var params = {
-              size: resultsPerPage,
               solution_ids: regulation.solution_ids.join(',')
             };
             if (solutionsBox.val() !== "") {
