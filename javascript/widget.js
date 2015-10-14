@@ -120,6 +120,10 @@
         return box;
       };
 
+      var formButtons = function() {
+        return container.find('.form-actions input');
+      };
+
       var loadOptionsFor = function(box, type) {
         switch(type) {
           case 'issues':
@@ -181,6 +185,7 @@
         };
 
         //Load issues
+        formButtons().attr('disabled', 'disabled');
         loadData('issues', options, function(issues) {
           loadDataInto('issues', issues);
         });
@@ -206,9 +211,8 @@
       };
 
       var loadOptionsForSolutions = function(box) {
-        disableBoxesFor(['regulations']);
-        disableBoxesFor(['issues']);
-        disableBoxesFor(['providers']);
+        disableBoxesFor(['regulations', 'issues', 'providers']);
+
         var options = {
           size: veryLargeInt,
           solution_ids: box.val()
@@ -235,14 +239,15 @@
             size: veryLargeInt,
             source_ids: issueIds.join(",")
           };
+
+          formButtons().attr('disabled', 'disabled');
           loadData('issues', iOptions, function(issues) {
             loadDataInto('issues', issues);
           });
         });
       };
 
-      //var loadOptionsForProviders = function(box) {};
-
+      // Load select options into select box.
       var loadDataInto = function(type, data) {
         var box = getSelectBoxFor(type);
         box.empty().append(emptyOptionHTML());
@@ -260,6 +265,10 @@
         }
 
         box.prop("disabled", false);
+
+        if (type === 'issues') {
+          formButtons().attr('disabled', false);
+        }
       };
 
       var disableBoxesFor = function(types) {
@@ -271,8 +280,8 @@
 
       var submitBtn = function() {
         return '<div class="form-actions col-xs-8">' +
-          '<input type="submit" class="btn btn-primary btn-lg" value="' + translate('submit') + '">' +
-          '<input type="reset" class="btn btn-default btn-lg" value="' + translate('clear') + '">' +
+          '<input type="submit" disabled="disabled" class="btn btn-primary btn-lg" value="' + translate('submit') + '">' +
+          '<input type="reset" disabled="disabled" class="btn btn-default btn-lg" value="' + translate('clear') + '">' +
         '</div>';
       };
 
