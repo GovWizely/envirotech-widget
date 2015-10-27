@@ -430,14 +430,20 @@
         return html;
       };
 
-      var loadPage = function(page, params, regulationId) {
+      var loadPage = function(page, params, regulationId, total) {
         params.size   = resultsPerPage;
         params.offset = (page - 1) * resultsPerPage;
         var resultsTable = $('#' + resultsTableId(regulationId));
         loadData('provider_solutions', params, function(providerSolutions) {
-          var nav = resultsTable.siblings('nav.container');
-          nav.find('div.summary .start').html(params.offset + 1);
-          nav.find('div.summary .end').html(params.offset + params.size);
+          var row = resultsTable.siblings('nav.container').find('.row');
+          var start = params.offset + 1;
+          var end = Math.min(total, params.offset + params.size);
+          var summary = $('<div class="small summary col-xs-3">' +
+            '<span class="start">' + start + '</span> - <span class="end">' + end + '</span> of ' + total +
+          '</div>');
+
+          row.find('.summary').remove();
+          row.prepend(summary);
 
           resultsTable.html(resultsListHTML(providerSolutions));
         });
@@ -445,11 +451,11 @@
 
       var buildPaginationNav = function(params, offset, total, regulationId) {
         var start = offset + 1;
-        var end = offset + params.size;
+        var end = Math.min(offset + params.size);
         var nav = $('<nav class="container"></nav>');
-        var row = $('<div class="row"><div class="small summary col-xs-3"><span class="start">' + start + '</span> - <span class="end">' + end + '</span> of ' + total + '</div></div>');
+        var row = $('<div class="row"></div>');
         row.append(buildPaginationUl(params, total, regulationId));
-        nav.append(row);
+        nav.append(row)
         return nav;
       };
 
@@ -462,7 +468,7 @@
           lapping: 0,
           page: 1,
           onSelect: function(page) {
-            loadPage(page, params, regulationId);
+            loadPage(page, params, regulationId, total);
           },
           onFormat: function(type) {
             switch (type) {
