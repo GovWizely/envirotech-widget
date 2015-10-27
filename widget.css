@@ -5255,9 +5255,9 @@
       margin: 10px 0; }
       .envirotech-widget-container #envirotech-results-container .enviro-regulation-div nav.container ul.pagination {
         margin: 5px 0 0; }
-    .envirotech-widget-container #envirotech-results-container .enviro-regulation-div .summary {
-      line-height: 2.5em;
-      padding-left: 0; }
+      .envirotech-widget-container #envirotech-results-container .enviro-regulation-div nav.container .summary {
+        line-height: 2.5em;
+        padding-left: 0; }
   .envirotech-widget-container .panel-default > .panel-heading {
     background-color: #585858;
     color: white; }
