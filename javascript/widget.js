@@ -419,7 +419,7 @@
         var langKey = translate('key');
         $.each(providerSolutions, function(i, ps) {
           var provider = EnvirotechActiveRecord.findById('providers', ps.provider_id);
-          var solution = EnvirotechActiveRecord.findById('solutions', ps.solution_ids);
+          var solution = EnvirotechActiveRecord.findById('solutions', ps.solution_id);
           if (provider && solution) {
             html = html + '<tr>' +
               '<td>' + solution['name_' + langKey] + '</td>' +
